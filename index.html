@@ -459,13 +459,14 @@ footer p{font-size:0.78rem;color:var(--text-light)}
         </div>
       </div>
       <div class="fi">
-        <form class="c-form" id="contactForm" onsubmit="submitForm(event)">
-          <input type="text" name="name" id="formName" placeholder="Your Name" required>
-          <input type="email" name="email" id="formEmail" placeholder="Email Address" required>
-          <input type="tel" name="phone" id="formPhone" placeholder="Phone Number">
-          <textarea name="message" id="formMessage" placeholder="Tell us about your home and what you need..."></textarea>
+        <form class="c-form" id="contactForm" action="https://formspree.io/f/hallie@championhomereset.com" method="POST">
+          <input type="text" name="name" placeholder="Your Name" required>
+          <input type="email" name="_replyto" placeholder="Email Address" required>
+          <input type="tel" name="phone" placeholder="Phone Number">
+          <textarea name="message" placeholder="Tell us about your home and what you need..."></textarea>
+          <input type="hidden" name="_subject" value="New Champion Home Reset Inquiry">
+          <input type="hidden" name="_next" value="https://champion-home-reset.vercel.app/?sent=true#contact">
           <button type="submit" id="submitBtn">Send Message →</button>
-          <p id="formStatus" style="text-align:center;font-size:0.85rem;margin-top:0.5rem;display:none;"></p>
         </form>
       </div>
     </div>
@@ -483,7 +484,7 @@ document.querySelectorAll('.fi').forEach(el=>obs.observe(el));
 window.addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('solid',window.scrollY>80)});
 document.getElementById('menuBtn').addEventListener('click',()=>{document.getElementById('navLinks').classList.toggle('open')});
 document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>document.getElementById('navLinks').classList.remove('open')));
-function submitForm(e){e.preventDefault();var b=document.getElementById('submitBtn');var s=document.getElementById('formStatus');var n=document.getElementById('formName').value;var em=document.getElementById('formEmail').value;var ph=document.getElementById('formPhone').value;var msg=document.getElementById('formMessage').value;b.disabled=true;b.textContent='Sending...';var data={name:n,email:em,phone:ph,message:msg,access_key:'d82f5d9a-7f8e-4f3a-b5c1-placeholder'};fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){return r.json()}).then(function(d){if(d.success){s.style.display='block';s.style.color='#2d5016';s.textContent='✓ Thank you! We will be in touch within 24 hours.';e.target.reset()}else{window.location.href='mailto:hallie@championhomereset.com?subject=Champion Home Reset Inquiry from '+encodeURIComponent(n)+'&body='+encodeURIComponent('Name: '+n+'\nEmail: '+em+'\nPhone: '+ph+'\n\n'+msg)}}).catch(function(){window.location.href='mailto:hallie@championhomereset.com?subject=Champion Home Reset Inquiry from '+encodeURIComponent(n)+'&body='+encodeURIComponent('Name: '+n+'\nEmail: '+em+'\nPhone: '+ph+'\n\n'+msg)}).finally(function(){b.disabled=false;b.textContent='Send Message →'})}
+if(new URLSearchParams(window.location.search).get('sent')){var c=document.getElementById('contactForm');if(c){c.innerHTML='<div style="text-align:center;padding:2rem;"><h3 style="color:#2d5016;">✓ Message Sent!</h3><p style="margin-top:1rem;">Thank you! We will be in touch within 24 hours.</p></div>'}}
 </script>
 </body>
 </html>

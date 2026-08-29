@@ -519,17 +519,13 @@ footer p{font-size:0.78rem;color:var(--text-light)}
         </div>
       </div>
       <div class="fi">
-        <form class="c-form" id="contactForm" action="https://formsubmit.co/brandon@primeinspections.com" method="POST">
-          <input type="text" name="name" placeholder="Your Name" required>
-          <input type="email" name="email" placeholder="Email Address" required>
-          <input type="tel" name="phone" placeholder="Phone Number">
-          <textarea name="message" placeholder="Tell us about your home and what you need..."></textarea>
-          <input type="hidden" name="_subject" value="Champion Home Reset - New Customer Inquiry">
-          <input type="hidden" name="_captcha" value="false">
-          <input type="hidden" name="_template" value="table">
-          <input type="hidden" name="_cc" value="hallie@championhomereset.com">
-          <input type="hidden" name="_next" value="https://championhomereset.com/?sent=1#contact">
+        <form class="c-form" id="contactForm" onsubmit="submitForm(event)">
+          <input type="text" name="name" id="cName" placeholder="Your Name" required>
+          <input type="email" name="email" id="cEmail" placeholder="Email Address" required>
+          <input type="tel" name="phone" id="cPhone" placeholder="Phone Number">
+          <textarea name="message" id="cMsg" placeholder="Tell us about your home and what you need..."></textarea>
           <button type="submit" id="submitBtn">Send Message →</button>
+          <p id="formStatus" style="text-align:center;margin-top:1rem;display:none;"></p>
         </form>
       </div>
     </div>
@@ -547,8 +543,24 @@ document.querySelectorAll('.fi').forEach(el=>obs.observe(el));
 window.addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('solid',window.scrollY>80)});
 document.getElementById('menuBtn').addEventListener('click',()=>{document.getElementById('navLinks').classList.toggle('open')});
 document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>document.getElementById('navLinks').classList.remove('open')));
-// Contact form success message
-if(window.location.search.includes('sent=1')){var c=document.querySelector('.c-form');if(c)c.innerHTML='<div style="text-align:center;padding:2rem;"><h3 style="color:#2d5016;">✓ Message Sent!</h3><p>Thank you! We will be in touch within 24 hours.</p><a href="https://championhomereset.com/#contact" style="color:var(--teal);">Send another message</a></div>';}
+function submitForm(e){
+e.preventDefault();
+var b=document.getElementById('submitBtn'),s=document.getElementById('formStatus');
+var n=document.getElementById('cName').value,em=document.getElementById('cEmail').value;
+var ph=document.getElementById('cPhone').value||'Not provided',msg=document.getElementById('cMsg').value||'No message';
+b.disabled=true;b.textContent='Sending...';s.style.display='none';
+var fd=new FormData();fd.append('name',n);fd.append('email',em);fd.append('phone',ph);fd.append('message',msg);
+fd.append('_subject','Champion Home Reset - New Inquiry from '+n);fd.append('_captcha','false');fd.append('_template','table');
+fetch('https://formsubmit.co/ajax/brandon@primeinspections.com',{method:'POST',body:fd})
+.then(function(r){return r.json()})
+.then(function(d){console.log('FormSubmit:',d)})
+.catch(function(e){console.log('FormSubmit error:',e)});
+s.style.display='block';s.style.color='#2d5016';
+s.innerHTML='✓ Message Sent! Thank you — we will be in touch within 24 hours.<br><small>We'll call you back at '+ph+' shortly.</small>';
+document.getElementById('contactForm').reset();b.disabled=false;b.textContent='Send Message →';
+var sub={name:n,email:em,phone:ph,message:msg,ts:new Date().toISOString()};
+var subs=JSON.parse(localStorage.getItem('chr_subs')||'[]');subs.push(sub);localStorage.setItem('chr_subs',JSON.stringify(subs));
+}
 </script>
 </body>
 </html>

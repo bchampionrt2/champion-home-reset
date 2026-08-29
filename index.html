@@ -459,14 +459,13 @@ footer p{font-size:0.78rem;color:var(--text-light)}
         </div>
       </div>
       <div class="fi">
-        <form class="c-form" id="contactForm" action="https://formspree.io/hallie@championhomereset.com" method="POST">
-          <input type="text" name="name" placeholder="Your Name" required>
-          <input type="email" name="_replyto" placeholder="Email Address" required>
-          <input type="tel" name="phone" placeholder="Phone Number">
-          <textarea name="message" placeholder="Tell us about your home and what you need..."></textarea>
-          <input type="hidden" name="_subject" value="New Champion Home Reset Inquiry">
-          <input type="hidden" name="_next" value="https://champion-home-reset.vercel.app/?sent=true#contact">
+        <form class="c-form" id="contactForm" onsubmit="sendForm(event)">
+          <input type="text" name="name" id="fname" placeholder="Your Name" required>
+          <input type="email" name="email" id="femail" placeholder="Email Address" required>
+          <input type="tel" name="phone" id="fphone" placeholder="Phone Number">
+          <textarea name="message" id="fmsg" placeholder="Tell us about your home and what you need..."></textarea>
           <button type="submit" id="submitBtn">Send Message →</button>
+          <p id="formMsg" style="text-align:center;font-size:0.9rem;margin-top:0.5rem;display:none;"></p>
         </form>
       </div>
     </div>
@@ -484,7 +483,7 @@ document.querySelectorAll('.fi').forEach(el=>obs.observe(el));
 window.addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('solid',window.scrollY>80)});
 document.getElementById('menuBtn').addEventListener('click',()=>{document.getElementById('navLinks').classList.toggle('open')});
 document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>document.getElementById('navLinks').classList.remove('open')));
-if(new URLSearchParams(window.location.search).get('sent')){var c=document.getElementById('contactForm');if(c){c.innerHTML='<div style="text-align:center;padding:2rem;"><h3 style="color:#2d5016;">✓ Message Sent!</h3><p style="margin-top:1rem;">Thank you! We will be in touch within 24 hours.</p></div>'}}
+function sendForm(e){e.preventDefault();var b=document.getElementById('submitBtn');var m=document.getElementById('formMsg');var n=document.getElementById('fname').value;var em=document.getElementById('femail').value;var ph=document.getElementById('fphone').value||'Not provided';var msg=document.getElementById('fmsg').value||'No message';b.disabled=true;b.textContent='Sending...';var subject='Champion Home Reset Inquiry from '+n;var body='Name: '+n+'%0D%0AEmail: '+em+'%0D%0APhone: '+ph+'%0D%0A%0D%0A'+encodeURIComponent(msg);var mailtoLink='mailto:hallie@championhomereset.com?subject='+encodeURIComponent(subject)+'&body=Name: '+encodeURIComponent(n)+'%0AEmail: '+encodeURIComponent(em)+'%0APhone: '+encodeURIComponent(ph)+'%0A%0AMessage:%0A'+encodeURIComponent(msg);window.location.href=mailtoLink;setTimeout(function(){m.style.display='block';m.style.color='#2d5016';m.textContent='✓ Your email app should have opened. Send the email to complete your request!';b.disabled=false;b.textContent='Send Message →'},1000)}
 </script>
 </body>
 </html>
